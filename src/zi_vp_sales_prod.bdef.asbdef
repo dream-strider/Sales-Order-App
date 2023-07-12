@@ -1,0 +1,54 @@
+managed implementation in class zcl_vp_sales_prod unique;
+strict ( 1 );
+with draft;
+
+define behavior for ZI_VP_SALES_PROD alias zproduct
+persistent table ztab_prod_02
+draft table ztab_product_drf
+etag master LastChangedAt
+lock master total etag LocalLastChangedAt
+authorization master( global )
+
+{
+  field ( mandatory : create )
+   PID;
+
+  field ( readonly )
+   CreatedAt,
+   CreatedBy,
+   LocalLastChangedAt,
+   LastChangedAt,
+   ChangedBy;
+
+  field ( readonly : update )
+   PID;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ZTAB_PROD_02
+  {
+    PID = pid;
+    AvlQty = avl_qty;
+    Price = price;
+    Curr = curr;
+    CreatedAt = created_at;
+    CreatedBy = created_by;
+    ChangedBy = changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+  // To validate the Currency Code
+  validation valCurrencyCode on save {update;create;}
+
+  // To validate whether the price is greater than 0 or not
+  validation valPrice on save {update;create;}
+}

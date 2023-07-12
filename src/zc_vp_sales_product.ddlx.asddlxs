@@ -1,0 +1,62 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'product', 
+    typeNamePlural: 'products'
+  }
+}
+annotate view ZC_VP_SALES_PRODUCT with
+{
+  @UI.facet: [ {
+    id: 'idIdentification', 
+    type: #IDENTIFICATION_REFERENCE, 
+    label: 'product', 
+    position: 10 
+  } ]
+  @UI.lineItem: [ {
+    position: 10 , 
+    importance: #MEDIUM, 
+    label: ''
+  } ]
+  @UI.identification: [ {
+    position: 10 , 
+    label: ''
+  } ]
+  PID;
+  
+  @UI.lineItem: [ {
+    position: 20 , 
+    importance: #MEDIUM, 
+    label: ''
+  } ]
+  @UI.identification: [ {
+    position: 20 , 
+    label: ''
+  } ]
+  AvlQty;
+  
+  @UI.lineItem: [ {
+    position: 30 , 
+    importance: #MEDIUM, 
+    label: 'Price'
+  } ]
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Price'
+  } ]
+  Price;
+  
+ /* @UI.lineItem: [ {
+    position: 40 , 
+    importance: #MEDIUM, 
+    label: 'Curr'
+  } ]
+  @UI.identification: [ {
+    position: 40 , 
+    label: 'Curr'
+  } ]
+  Curr; */
+  
+  @UI.hidden: true
+  LastChangedAt;
+}

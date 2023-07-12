@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZCM_CUS_02</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>message class for customer</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Invalid Currency Code &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Employee ID Does not Exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Product ID Does not Exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Price should be greater than 0</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>&amp;1 is not a valid phone number</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>&amp;1 is not a valid  Email Address</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Enter a valid Product ID</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>&amp;1 is not a valid Employee ID</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZCM_CUS_02</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>&amp;2  is greater than available qty &apos; &amp;1 &apos;</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>

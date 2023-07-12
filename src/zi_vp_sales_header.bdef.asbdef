@@ -1,0 +1,71 @@
+managed implementation in class zcl_vp_sales_header unique;
+strict ( 1 );
+
+define behavior for ZI_VP_SALES_HEADER alias Header
+persistent table ztab_sheader
+lock master
+authorization master ( global )
+etag master LastChangedAt
+{
+
+ field ( mandatory : create )
+   SalesId;
+
+  field ( readonly )
+   CreatedAt,
+   CreatedBy,
+   LocalLastChangedAt,
+   LastChangedAt,
+   ChangedBy;
+
+    field ( readonly:update ) SalesId;
+
+  create;
+  update;
+  delete;
+
+  association _Item { create; }
+
+   mapping for ztab_sheader
+  {
+
+    SalesID = sales_id;
+    CustID = cust_id;
+    EmpID = emp_id;
+    Descrip = descrip;
+    CreatedAt = created_at;
+    CreatedBy = created_by;
+    ChangedBy = changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for zi_vp_sales_item alias Item
+persistent table ztab_sitem
+lock dependent by _Header
+authorization dependent by _Header
+etag master LastChangedAt
+{
+  update;
+  delete;
+  field ( readonly ) SalesId;
+  field ( readonly ) ItemNo;
+  association _Header;
+
+   mapping for ztab_sitem
+  {
+    ItemNo = item_no;
+    SalesID = sales_id;
+    PID = pid;
+    Qty = qty;
+    Netprice = net_price;
+    CurrencyCode = currency_code;
+    CreatedAt = created_at;
+    CreatedBy = created_by;
+    ChangedBy = changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+  validation valtest on save {create;update;}
+}

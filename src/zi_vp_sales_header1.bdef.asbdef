@@ -1,0 +1,108 @@
+managed implementation in class zcl_vp_sales_header1 unique;
+strict ( 1 );
+//with draft;
+
+define behavior for ZI_VP_SALES_HEADER1 alias sales_header
+persistent table ztab_sheader
+//draft table ztab_sheader_drf
+etag master LastChangedAt
+lock master //total etag LocalLastChangedAt
+authorization master ( global )
+
+{
+  field ( mandatory : create )
+  SalesID;
+
+  field ( readonly )
+  CreatedAt,
+  CreatedBy,
+  LocalLastChangedAt,
+  LastChangedAt,
+  ChangedBy;
+
+  field ( readonly : update )
+  SalesID;
+
+
+  create;
+  update;
+  delete;
+
+  /* draft action Edit;
+   draft action Activate;
+   draft action Discard;
+   draft action Resume;
+   draft determine action Prepare; */
+
+  association _Item { create; }
+  mapping for ztab_sheader
+    {
+      SalesID            = sales_id;
+      CustID             = cust_id;
+      EmpID              = emp_id;
+      Descrip            = descrip;
+      CreatedAt          = created_at;
+      CreatedBy          = created_by;
+      ChangedBy          = changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+
+
+  validation valEmpid on save { update; create; }
+
+}
+
+define behavior for ZI_VP_SALES_ITEM1 alias Item
+persistent table ztab_sitem
+//Sdraft table ztab_sitem_drf
+etag master LastChangedAt
+authorization dependent by _Header
+lock dependent
+{
+  field ( mandatory : create )
+  ItemNo;
+
+  field ( readonly )
+  CreatedAt,
+  CreatedBy,
+  LocalLastChangedAt,
+  LastChangedAt,
+  ChangedBy,
+  NetPrice,
+  CurrencyCode;
+
+  field ( readonly : update )
+  ItemNo;
+
+  update;
+  delete;
+
+
+
+  field ( readonly )
+  SalesId;
+
+  association _Header;
+  mapping for ztab_sitem
+    {
+      ItemNo             = item_no;
+      SalesId            = sales_id;
+      Pid                = pid;
+      Qty                = qty;
+      NetPrice           = net_price;
+      CurrencyCode       = currency_code;
+      CreatedAt          = created_at;
+      CreatedBy          = created_by;
+      ChangedBy          = changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+
+
+  // validation valCurrencyCode on save {update;create;}
+  validation valPid on save { update; create; }
+  determination calPrice on modify { field Qty; field Pid; }
+  validation valQty on save { create; }
+  determination calQty on save { create; }
+}

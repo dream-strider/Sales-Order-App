@@ -1,0 +1,51 @@
+managed implementation in class ZCL_VP_SALES_CUSTOMER unique;
+strict ( 1 );
+with draft;
+
+define behavior for ZI_VP_SALES_CUSTOMER alias Customer
+persistent table ztab_cust_02
+draft table ZTB_VP_CUST_DRFT
+etag master LastChangedAt
+lock master total etag LocalLastChangedAt
+authorization master( global )
+
+{
+  field ( mandatory : create )
+   CustID;
+
+  field ( readonly )
+   CreatedAt,
+   CreatedBy,
+   LocalLastChangedAt,
+   LastChangedAt,
+   ChangedBy;
+
+  field ( readonly : update )
+   CustID;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ZTAB_CUST_02
+  {
+    CustID = cust_id;
+    Name = name;
+    Phone = phone;
+    Email = email;
+    CreatedAt = created_at;
+    CreatedBy = created_by;
+    ChangedBy = changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+  validation valPhone on save {update;create;}
+  validation valEmail on save {update;create;}
+}

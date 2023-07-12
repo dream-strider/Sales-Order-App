@@ -1,0 +1,8 @@
+@EndUserText.label: 'Service definition forZC_VP_SALES_CUSTOMER'
+define service ZVP01_SALES {
+  expose ZC_VP_SALES_CUSTOMER as Customer;
+  expose ZC_VP_SALES_EMP as Employee;
+  expose ZC_VP_SALES_PRODUCT as Product;
+  expose ZC_VP_SALES_HEADER1 as sales_header;
+  expose ZC_VP_SALES_ITEM1 as sales_item;
+}

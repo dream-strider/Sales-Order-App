@@ -1,0 +1,49 @@
+managed implementation in class zcl_vp_sales_emp unique;
+strict ( 1 );
+with draft;
+
+define behavior for ZI_VP_SALES_EMP alias employee_view
+persistent table ztab_emp_02
+draft table ztab_vp_emp_drft
+etag master LastChangedAt
+lock master total etag LocalLastChangedAt
+authorization master( global )
+
+{
+  field ( mandatory : create )
+   EmpID;
+
+  field ( readonly )
+   CreatedAt,
+   CreatedBy,
+   LocalLastChangedAt,
+   LastChangedAt,
+   ChangedBy;
+
+  field ( readonly : update )
+   EmpID;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ZTAB_EMP_02
+  {
+    EmpID = emp_id;
+    Name = name;
+    Dob = dob;
+    Des = des;
+    CreatedAt = created_at;
+    CreatedBy = created_by;
+    ChangedBy = changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
