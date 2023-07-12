@@ -14,6 +14,8 @@ CLASS lhc_item DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR Item~valQty.
     METHODS calQty FOR DETERMINE ON SAVE
       IMPORTING keys FOR Item~calQty.
+    METHODS QtyChange FOR DETERMINE ON MODIFY
+      IMPORTING keys FOR Item~QtyChange.
 
 ENDCLASS.
 
@@ -197,7 +199,7 @@ CLASS lhc_item IMPLEMENTATION.
 
   METHOD calQty.
 
-    DATA: lt_qty  TYPE TABLE FOR READ RESULT zi_vp_sales_item1, lt_prod TYPE TABLE FOR READ RESULT zi_vp_sales_prod.
+    DATA: lt_qty  TYPE TABLE FOR READ RESULT zi_vp_sales_item1, lt_prod TYPE TABLE FOR READ RESULT zi_vp_sales_prod, wa_qty TYPE ztab_valchange.
 
     " Loading Item Data to local table
 
@@ -225,6 +227,12 @@ CLASS lhc_item IMPLEMENTATION.
       IF sy-subrc EQ 0.
 
         lv_qty = lv_qty - ls_qty-Qty.
+        wa_qty-pid = ls_qty-Pid.   "Inserting qty with respective PID and Item Number into work area of value change table
+        wa_qty-qty = ls_qty-Qty.
+        wa_qty-itemno = ls_qty-ItemNo.
+        DELETE FROM ztab_valchange WHERE pid = @ls_qty-Pid AND itemno = @ls_qty-ItemNo.
+        INSERT ztab_valchange FROM @wa_qty.   " Inserting the qty into value change table to use in future during edit option
+
 
       ENDIF.
 
@@ -246,6 +254,84 @@ CLASS lhc_item IMPLEMENTATION.
     WITH lt_update REPORTED DATA(lt_report).
 
     reported-sales_header = CORRESPONDING #( lt_report-zproduct ).
+
+
+  ENDMETHOD.
+
+  METHOD QtyChange.
+
+  DATA: lt_qty  TYPE TABLE FOR READ RESULT zi_vp_sales_item1, lt_prod TYPE TABLE FOR READ RESULT zi_vp_sales_prod, wa_qty TYPE ztab_valchange.
+
+    " Loading Item Data to local table
+
+    READ ENTITIES OF zi_vp_sales_header1 IN LOCAL MODE
+    ENTITY Item FIELDS ( ItemNo Pid Qty )
+    WITH CORRESPONDING #( keys ) RESULT lt_qty.
+
+
+
+    "Looping data to work area to perform calculations
+
+    LOOP AT lt_qty INTO DATA(ls_qty).
+
+
+      "Loading product data whose pid matches into local table lt_prod
+      READ ENTITIES OF zi_vp_sales_prod
+      ENTITY zproduct ALL  FIELDS
+      WITH VALUE #( ( pid = ls_qty-Pid ) ) RESULT lt_prod.
+
+
+      "Storing available qty into a local variable
+      SELECT SINGLE FROM zi_vp_sales_prod FIELDS AvlQty
+      WHERE pid = @ls_qty-Pid
+      INTO @DATA(lv_qty).
+      IF sy-subrc EQ 0.
+
+        SELECT SINGLE FROM ztab_valchange FIELDS qty
+        WHERE pid = @ls_qty-Pid AND itemno = @ls_qty-ItemNo
+        INTO @DATA(lv_orgQty).
+
+        IF lv_orgqty gt ls_qty-Qty.
+
+        lv_qty = lv_qty + (   lv_orgqty - ls_qty-Qty ).
+
+        ELSE.
+
+        lv_qty = lv_qty - ( ls_qty-Qty - lv_orgqty ) .
+
+
+        ENDIF.
+
+
+      "  lv_qty = lv_qty - ls_qty-Qty.
+        wa_qty-pid = ls_qty-Pid.   "Inserting qty with respective PID and Item Number into work area of value change table
+        wa_qty-qty = ls_qty-Qty.
+        wa_qty-itemno = ls_qty-ItemNo.
+        DELETE FROM ztab_valchange WHERE pid = @ls_qty-Pid AND itemno = @ls_qty-ItemNo.
+        INSERT ztab_valchange FROM @wa_qty.   " Inserting the qty into value change table to use in future during edit option
+
+
+      ENDIF.
+
+
+
+    ENDLOOP.
+
+    " loading the new available qty from local variable
+    LOOP AT lt_prod INTO DATA(ls_prod).
+      ls_prod-AvlQty = lv_qty.
+      MODIFY lt_prod FROM ls_prod.
+    ENDLOOP.
+
+    DATA lt_update TYPE TABLE FOR UPDATE zi_vp_sales_prod.
+    lt_update = CORRESPONDING #( lt_prod ).
+
+    MODIFY ENTITIES OF zi_vp_sales_prod
+    ENTITY zproduct UPDATE FIELDS ( AvlQty Price Curr )
+    WITH lt_update REPORTED DATA(lt_report).
+
+    reported-sales_header = CORRESPONDING #( lt_report-zproduct ).
+
 
 
   ENDMETHOD.
