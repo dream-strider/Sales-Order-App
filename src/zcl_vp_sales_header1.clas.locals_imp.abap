@@ -16,6 +16,8 @@ CLASS lhc_item DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR Item~calQty.
     METHODS QtyChange FOR DETERMINE ON MODIFY
       IMPORTING keys FOR Item~QtyChange.
+    METHODS QtyCngDel FOR DETERMINE ON MODIFY
+      IMPORTING keys FOR Item~QtyCngDel.
 
 ENDCLASS.
 
@@ -331,6 +333,57 @@ CLASS lhc_item IMPLEMENTATION.
     WITH lt_update REPORTED DATA(lt_report).
 
     reported-sales_header = CORRESPONDING #( lt_report-zproduct ).
+
+
+
+  ENDMETHOD.
+
+  METHOD QtyCngDel.
+
+  DATA:  lt_prod TYPE TABLE FOR READ RESULT zi_vp_sales_prod.
+
+
+SELECT *  FROM ztab_valchange    INTO  TABLE @data(lt_val).
+SELECT * FROM ztab_sitem  INTO TABLE @DATA(lt_item).
+
+
+
+LOOP AT lt_val INTO DATA(ls_val).
+LOOP AT lt_item INTO DATA(ls_item).
+IF ls_val-itemno eq ls_item-item_no.
+EXIT.
+ENDIF.
+
+ENDLOOP.
+IF ls_val-itemno eq ls_item-item_no.
+CONTINUE.
+
+ENDIF.
+
+ READ ENTITIES OF zi_vp_sales_prod
+      ENTITY zproduct ALL  FIELDS
+      WITH VALUE #( ( pid = ls_val-pid ) ) RESULT lt_prod.
+
+
+      LOOP AT lt_prod INTO DATA(ls_prod).
+      ls_prod-AvlQty = ls_prod-AvlQty + ls_val-qty.
+      MODIFY lt_prod FROM ls_prod.
+    ENDLOOP.
+
+    DATA lt_update TYPE TABLE FOR UPDATE zi_vp_sales_prod.
+    lt_update = CORRESPONDING #( lt_prod ).
+
+    MODIFY ENTITIES OF zi_vp_sales_prod
+    ENTITY zproduct UPDATE FIELDS ( AvlQty Price Curr )
+    WITH lt_update REPORTED DATA(lt_report).
+
+    reported-sales_header = CORRESPONDING #( lt_report-zproduct ).
+
+    DELETE FROM ztab_valchange WHERE itemno = @ls_val-itemno.
+
+
+
+ENDLOOP.
 
 
 

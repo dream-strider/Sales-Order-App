@@ -106,4 +106,5 @@ lock dependent
   validation valQty on save { create; }
   determination calQty on save { create; }
   determination QtyChange on modify { field Qty; }
+  determination QtyCngDel on modify { delete; }
 }
