@@ -46,7 +46,16 @@ annotate view ZC_VP_SALES_HEADER1 with
                type: #LINEITEM_REFERENCE,
                label: 'Item',
                position: 40,
-               targetElement: '_Item'} ]
+               targetElement: '_Item'}
+//               { id:              'ChartDefault',
+//                label:           'Chart facet',
+//                position:        20,  
+//                purpose:         #STANDARD, 
+//                type:            #CHART_REFERENCE,
+//                targetQualifier: 'Chart1', 
+//                targetElement:   '_Item'
+//                 }
+] 
   @UI.lineItem: [ {
     position: 10 , 
     importance: #MEDIUM, 

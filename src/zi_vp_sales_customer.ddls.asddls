@@ -4,7 +4,7 @@
 define root view entity ZI_VP_SALES_CUSTOMER
   as select from ztab_cust_02 as Customer
   
-  association to ZI_VP_SALES_HEADER1 as _Header on $projection.CustID = _Header.CustID
+  association [0..*] to ZI_VP_SALES_HEADER1 as _Header on $projection.CustID = _Header.CustID
 {
   key cust_id as CustID,
   name as Name,

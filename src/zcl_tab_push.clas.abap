@@ -12,7 +12,9 @@ ENDCLASS.
 
 
 
-CLASS zcl_tab_push IMPLEMENTATION.
+CLASS ZCL_TAB_PUSH IMPLEMENTATION.
+
+
  METHOD if_oo_adt_classrun~main.
   "  DATA: wa_sal TYPE ztab_sheader .
  "   wa_sal-cust_id = 'c62'.

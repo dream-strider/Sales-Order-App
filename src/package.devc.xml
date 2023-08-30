@@ -4,7 +4,6 @@
   <asx:values>
    <DEVC>
     <CTEXT>Sales package</CTEXT>
-    <TPCLASS>X</TPCLASS>
    </DEVC>
   </asx:values>
  </asx:abap>

@@ -5,6 +5,40 @@
     typeNamePlural: 'Sales Items'
   }
 }
+@UI.chart: [
+  // Search Term #BulletMicroChart, #BulletMicroChartTable
+//  {
+//    qualifier: 'bulletChart',
+//    title: 'Bullet Micro Chart (#BulletMicroChart)',
+//    description: 'This is a micro chart',
+//    chartType: #BULLET,
+//    measures: ['Qty'],
+//    measureAttributes: [
+//      {
+//        measure: 'Qty',
+//        role: #AXIS_1,
+//        asDataPoint: true
+//      }
+//    ]
+//  },
+  {
+    qualifier: 'radialChart',
+    title: 'Qty %',
+    description: ' % of bought quantity  to available quantity',
+    chartType: #DONUT,
+    measures: ['qtyR'],
+    measureAttributes: [
+      {
+        measure: 'qtyR',
+        role: #AXIS_1,
+        asDataPoint: true
+      }
+    ]
+  }
+  
+ 
+  ]
+
 annotate view ZC_VP_SALES_ITEM1
     with 
 {
@@ -13,7 +47,66 @@ annotate view ZC_VP_SALES_ITEM1
     type: #IDENTIFICATION_REFERENCE, 
     label: 'Item No', 
     position: 10 
-  } ]
+  } ,
+  
+   // Search Term #HeaderCollectionFacet
+    {
+      purpose: #HEADER,
+      type: #COLLECTION,
+      id: 'CollectionFacet2'
+    },
+  
+//  {
+//      purpose: #HEADER,
+//      id: 'FacetCollection',
+//      type: #COLLECTION
+//    },
+//    // Search Term #HeaderFieldGroup
+//    {
+//      parentId   : 'FacetCollection',
+//      label      : 'General Data (#HeaderFieldGroup)',
+//      type       : #FIELDGROUP_REFERENCE,
+//      targetQualifier: 'HeaderData'
+//    },
+//    
+//    {
+//      purpose: #STANDARD,
+//      type: #COLLECTION,
+//      label: 'Micro Chart Data(#MicroChartDataSection)',
+//      id: 'chartDataCollection'
+//    },
+//    // Search Term #ChartForm
+//    {
+//      parentId   : 'chartDataCollection',
+//      label      : 'Micro Chart Data (#ChartForm)',
+//      type       : #FIELDGROUP_REFERENCE,
+//      targetQualifier: 'chartData'
+//    },
+//    // Search Term #Preview
+//    {
+//      parentId   : 'chartDataCollection',
+//      label      : 'Chart Data Preview (#Preview)',
+//      type       : #FIELDGROUP_REFERENCE,
+//      targetQualifier: 'chartDataPreview',
+//      isPartOfPreview: false
+//    },
+    
+    // Search Term #RadialMicroChart
+    {
+      parentId   : 'CollectionFacet2',
+      type       : #CHART_REFERENCE,
+      targetQualifier: 'radialChart'
+    }
+    
+     // Search Term #RadialMicroChart, #RadialMicroChartTable
+  
+    
+//  {
+//      parentId   : 'FacetCollection',
+//      type       : #CHART_REFERENCE,
+//      targetQualifier: 'bulletChart'
+//    }
+]
   @UI.lineItem: [ {
     position: 10 , 
     importance: #MEDIUM, 
@@ -57,9 +150,25 @@ annotate view ZC_VP_SALES_ITEM1
   @UI.identification: [ {
     position: 40 , 
     label: ''
-  } ]
+     } ]
+ 
+     
   @EndUserText.label: 'Qty'
+  
   Qty;
+  
+  @UI.lineItem: [ {
+    position: 70 , 
+    importance: #MEDIUM, 
+    label: ''
+  } ]
+  @UI.identification: [ {
+    position: 70 , 
+    label: ''
+  } ]
+  @EndUserText.label: 'NetPrice'
+  
+  NetPrice;
   
   @UI.lineItem: [ {
     position: 50 , 
@@ -70,10 +179,34 @@ annotate view ZC_VP_SALES_ITEM1
     position: 50 , 
     label: ''
   } ]
-  @EndUserText.label: 'NetPrice'
-  NetPrice;
+  @EndUserText.label: 'Avl Qty'
+  AvlQty;
+  
+  @UI: {
+    dataPoint: {
+      qualifier: '',
+      targetValueElement: 'AvlQty', //The relation between the value and the target value will be displayed as a percentage
+//      criticality: 'CriticalityCode'
+        criticalityCalculation:{
+                      improvementDirection: #MAXIMIZE ,
+                      deviationRangeLowValue: 10.00 ,
+                      toleranceRangeLowValue: 100.00 }
+    },
+    // Search Term #RadialMicroChartTable
+    lineItem: [
+      {
+        type: #AS_CHART,
+        label: 'Qty %',
+        valueQualifier: 'radialChart',
+        position: 60
+      }
+    ]
+  }
+  qtyR;
+  
   
   @UI.hidden: true
   LastChangedAt;
+  
     
 }

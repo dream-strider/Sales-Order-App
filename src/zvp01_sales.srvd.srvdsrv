@@ -1,4 +1,4 @@
-@EndUserText.label: 'Service definition forZC_VP_SALES_CUSTOMER'
+@EndUserText.label: 'ZC_VP_SALES_CUSTOMER'
 define service ZVP01_SALES {
   expose ZC_VP_SALES_CUSTOMER as Customer;
   expose ZC_VP_SALES_EMP as Employee;

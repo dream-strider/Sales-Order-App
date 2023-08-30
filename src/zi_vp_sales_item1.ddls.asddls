@@ -10,11 +10,13 @@
 define view entity ZI_VP_SALES_ITEM1 as select from ztab_sitem as Item
 
 association to parent ZI_VP_SALES_HEADER1 as _Header on $projection.SalesId = _Header.SalesID
+association  to ZI_VP_SALES_PROD as _Product on $projection.Pid = _Product.PID
 {
     key item_no as ItemNo,
     sales_id as SalesId,
     pid as Pid,
     qty as Qty,
+    qty as qtyR,
     @Semantics.amount.currencyCode: 'CurrencyCode'
     net_price as NetPrice,
     currency_code as CurrencyCode,
@@ -31,5 +33,7 @@ association to parent ZI_VP_SALES_HEADER1 as _Header on $projection.SalesId = _H
     
     // Associations
     
-    _Header
+    _Header,
+    _Product
+    
 }
